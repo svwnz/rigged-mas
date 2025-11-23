@@ -1,0 +1,28 @@
+{
+  "name": "merry-rigged-mas",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "security-check": "npm audit --audit-level high",
+    "pre-deploy": "npm run type-check && npm run security-check && npm run build",
+    "deploy": "wrangler pages publish dist --project-name=merry-rigged-mas",
+    "db:init": "wrangler d1 execute christmas-lights-db --file=./schema.sql",
+    "db:init-local": "wrangler d1 execute christmas-lights-db --local --file=./schema.sql"
+  },
+  "dependencies": {
+    "lucide-react": "^0.554.0",
+    "react-dom": "^19.2.0",
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

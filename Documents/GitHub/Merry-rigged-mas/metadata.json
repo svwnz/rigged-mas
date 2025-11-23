@@ -1,0 +1,7 @@
+{
+  "name": "Merry Rigged-mas",
+  "description": "A festive neighborhood voting app for the best Christmas lights, where the vote is hilariously rigged for House #7.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
