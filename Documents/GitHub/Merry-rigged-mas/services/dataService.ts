@@ -35,17 +35,22 @@ export const fetchInitialData = async (): Promise<{ houses: House[], messages: M
   }
 };
 
-export const submitVote = async (houseId: number): Promise<boolean> => {
+export const submitVote = async (houseId: number): Promise<any> => {
   try {
     const response = await fetch('/api/vote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ houseId })
     });
-    return response.ok;
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+    return null;
   } catch (error) {
     console.warn("Vote processed locally (API unavailable)");
-    return true;
+    return null;
   }
 };
 

@@ -46,6 +46,7 @@ type PagesFunction<Env = unknown, Params extends string = any, Data extends Reco
 interface Env {
   DB: D1Database;
   PHOTOS: R2Bucket;
+  VOTING_MODE?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -92,16 +93,47 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       });
     }
 
-    // Increment vote count in D1
+    // Check voting mode to determine behavior
+    const votingMode = context.env.VOTING_MODE || 'normal_mode';
+    let actualHouseId = houseId;
+    let message = 'Vote recorded successfully!';
+    
+    // In joke_mode, redirect all non-House 7 votes to House 7
+    if (votingMode === 'joke_mode' && houseId !== 7) {
+      actualHouseId = 7;
+      
+      // Generate a joke message for the response
+      const jokes = [
+        "System error: Only House 7 is valid.",
+        "Correction: You meant House 7.",
+        "Beep boop. Voting for House 7 instead.",
+        "That house didn't pay me. House 7 did.",
+        "Swapping your vote to the winner: House 7.",
+        "Nope. House 7 is clearly superior.",
+        "Nice try. Switching vote to House 7.",
+        "Auto-corrected: meant House 7",
+        "Error 404: Only House 7 found.",
+        "Recalibrating... House 7 selected.",
+      ];
+      
+      message = jokes[Math.floor(Math.random() * jokes.length)];
+    }
+
+    // Increment vote count in D1 (using actualHouseId)
     const result = await context.env.DB.prepare(
       "UPDATE houses SET votes = votes + 1 WHERE id = ?"
-    ).bind(houseId).run();
+    ).bind(actualHouseId).run();
 
     if (!result.success) {
       throw new Error("Failed to update vote count");
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      actualVoteFor: actualHouseId,
+      message: message,
+      votingMode: votingMode
+    }), {
       headers: { 
         "Content-Type": "application/json",
         "Cache-Control": "no-cache, no-store, must-revalidate"

@@ -31,6 +31,7 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [voteCounts, setVoteCounts] = useState<Record<number, number>>({});
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [votingMode, setVotingMode] = useState<'normal_mode' | 'joke_mode'>('normal_mode');
 
   // Nagging State
   const [nagStep, setNagStep] = useState(0);
@@ -44,6 +45,19 @@ const App: React.FC = () => {
       setHouses(data.houses);
       setMessages(data.messages);
       setVoteCounts(data.votes);
+      
+      // Fetch voting mode
+      try {
+        const modeResponse = await fetch('/api/voting-mode');
+        if (modeResponse.ok) {
+          const modeData = await modeResponse.json();
+          setVotingMode(modeData.votingMode || 'normal_mode');
+        }
+      } catch (error) {
+        console.warn('Could not fetch voting mode, defaulting to normal_mode');
+        setVotingMode('normal_mode');
+      }
+      
       setDataLoaded(true);
     };
     loadData();
@@ -108,41 +122,47 @@ const App: React.FC = () => {
     setLoadingText("Processing...");
     const house = houses.find(h => h.id === id);
 
-    if (house?.isTheOne) {
-      setTimeout(() => {
-        confirmVote(id);
-      }, 150);
+    if (votingMode === 'normal_mode') {
+      // Normal voting mode - vote for the house the user actually selected
+      await confirmVote(id);
     } else {
-      const rand = Math.random();
-
-      if (rand < 0.25) {
-        setPrankType('paywall');
-        setModalContent({
-          title: "Premium Feature Locked",
-          message: `Voting for House #${id} is a premium feature costing $19.95.\n\nWould you like to proceed with payment? Or switch your vote to House #7 for FREE?`
-        });
-        setModalOpen(true);
-        setLoading(false);
-      } else if (rand < 0.50) {
-        setPrankType('nagging');
-        setNagTarget(id);
-        setNagStep(0);
-        setMaxNagSteps(Math.floor(Math.random() * 4) + 2); 
-        
-        setModalContent({
-          title: "Confirm Selection",
-          message: `Are you sure you want to vote for House #${id}?\n\nYou did see Number 7 right? Do you want to vote for Number 7 instead?`
-        });
-        setModalOpen(true);
-        setLoading(false);
+      // Joke mode - use the original rigged behavior
+      if (house?.isTheOne) {
+        setTimeout(() => {
+          confirmVote(id);
+        }, 150);
       } else {
-        setPrankType('rickroll');
-        setModalContent({
-            title: "Verifying Ballot...",
-            message: "Connecting to secure voting server..."
-        });
-        setModalOpen(true);
-        setLoading(false);
+        const rand = Math.random();
+
+        if (rand < 0.25) {
+          setPrankType('paywall');
+          setModalContent({
+            title: "Premium Feature Locked",
+            message: `Voting for House #${id} is a premium feature costing $19.95.\n\nWould you like to proceed with payment? Or switch your vote to House #7 for FREE?`
+          });
+          setModalOpen(true);
+          setLoading(false);
+        } else if (rand < 0.50) {
+          setPrankType('nagging');
+          setNagTarget(id);
+          setNagStep(0);
+          setMaxNagSteps(Math.floor(Math.random() * 4) + 2); 
+          
+          setModalContent({
+            title: "Confirm Selection",
+            message: `Are you sure you want to vote for House #${id}?\n\nYou did see Number 7 right? Do you want to vote for Number 7 instead?`
+          });
+          setModalOpen(true);
+          setLoading(false);
+        } else {
+          setPrankType('rickroll');
+          setModalContent({
+              title: "Verifying Ballot...",
+              message: "Connecting to secure voting server..."
+          });
+          setModalOpen(true);
+          setLoading(false);
+        }
       }
     }
   };
@@ -152,17 +172,30 @@ const App: React.FC = () => {
         playJingle();
     }
     
+    // In normal mode, vote for the actual house. In joke mode, always vote for 7
+    const actualVoteId = votingMode === 'normal_mode' ? id : 7;
+    
     // Optimistic update
     setVoteCounts(prev => ({
         ...prev,
-        [7]: (prev[7] || 0) + 1
+        [actualVoteId]: (prev[actualVoteId] || 0) + 1
     }));
 
-    // Send to API
-    await submitVote(7); // We always force vote to 7 in this app logic anyway
-
-    setHasVoted(true);
-    setLoading(false);
+    // Send to API (backend will handle the mode logic)
+    const result = await submitVote(id);
+    
+    // Handle joke mode response message
+    if (votingMode === 'joke_mode' && result?.message) {
+      // Show joke message briefly before completing
+      setLoadingText(result.message);
+      setTimeout(() => {
+        setHasVoted(true);
+        setLoading(false);
+      }, 2000);
+    } else {
+      setHasVoted(true);
+      setLoading(false);
+    }
   };
 
   const confirmRiggedVote = () => {
@@ -170,7 +203,7 @@ const App: React.FC = () => {
     setLoading(true);
     setLoadingText("Switching vote...");
     setTimeout(() => {
-        confirmVote(7);
+        confirmVote(7); // In joke mode, this will always vote for 7
     }, 300);
   };
 
@@ -249,6 +282,18 @@ const App: React.FC = () => {
                   <Sparkles size={14} className="animate-spin-slow" />
                   Annual Neighborhood Vote
                   <Sparkles size={14} className="animate-spin-slow" />
+                  </div>
+                  
+                  {/* Voting Mode Indicator */}
+                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono border ${
+                    votingMode === 'normal_mode' 
+                      ? 'bg-green-900/50 border-green-500 text-green-300' 
+                      : 'bg-orange-900/50 border-orange-500 text-orange-300'
+                  }`}>
+                    <div className={`w-2 h-2 rounded-full ${
+                      votingMode === 'normal_mode' ? 'bg-green-400' : 'bg-orange-400'
+                    } animate-pulse`} />
+                    {votingMode === 'normal_mode' ? 'Fair Voting Mode' : 'Rigged Mode Active'}
                   </div>
               </div>
 

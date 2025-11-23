@@ -5,6 +5,10 @@ compatibility_flags = ["nodejs_compat"]
 # Pages configuration
 pages_build_output_dir = "dist"
 
+# Environment variables for all environments
+[vars]
+VOTING_MODE = "normal_mode"
+
 # D1 Database binding for Pages Functions
 [[d1_databases]]
 binding = "DB"
@@ -19,6 +23,7 @@ bucket_name = "christmas-lights-photos"
 # Environment variables for production
 [env.production.vars]
 NODE_ENV = "production"
+VOTING_MODE = "normal_mode"
 
 # D1 binding for production environment
 [[env.production.d1_databases]]
