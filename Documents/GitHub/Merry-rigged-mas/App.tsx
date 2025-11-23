@@ -6,7 +6,6 @@ import Confetti from './components/Confetti';
 import Leaderboard from './components/Leaderboard';
 import FeedbackBoard from './components/FeedbackBoard';
 import NavBar from './components/NavBar';
-import ElfAnimation from './components/ElfAnimation';
 // We still import HOUSES for typing, but data comes from service
 import { House, Message } from './types';
 import { Sparkles, ArrowRight, RefreshCw, AlertTriangle, Trophy, CreditCard, HelpCircle, Siren, MessageSquare, Music } from 'lucide-react';
@@ -22,7 +21,7 @@ const App: React.FC = () => {
   const [loadingText, setLoadingText] = useState("Processing...");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({ title: '', message: '' });
-  const [prankType, setPrankType] = useState<'standard' | 'paywall' | 'nagging' | 'elf' | 'rickroll'>('standard');
+  const [prankType, setPrankType] = useState<'standard' | 'paywall' | 'nagging' | 'rickroll'>('standard');
   
   // Rick Roll State
   const [rickRollStage, setRickRollStage] = useState<'loading' | 'playing'>('loading');
@@ -134,10 +133,6 @@ const App: React.FC = () => {
           title: "Confirm Selection",
           message: `Are you sure you want to vote for House #${id}?\n\nYou did see Number 7 right? Do you want to vote for Number 7 instead?`
         });
-        setModalOpen(true);
-        setLoading(false);
-      } else if (rand < 0.75) {
-        setPrankType('elf');
         setModalOpen(true);
         setLoading(false);
       } else {
@@ -374,13 +369,8 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* Full Screen Elf Animation */}
-      {modalOpen && prankType === 'elf' && (
-         <ElfAnimation onComplete={confirmRiggedVote} />
-      )}
-
       {/* Prank Modals */}
-      {modalOpen && prankType !== 'elf' && (
+      {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => { if(prankType !== 'rickroll') setModalOpen(false) }} />
           

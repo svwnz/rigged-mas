@@ -91,7 +91,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ houses, votes }) => {
       </div>
       
       <div className="p-3 bg-black/20 text-center text-xs text-slate-400 border-t border-white/5 italic">
-        * Voting algorithm certified by North Pole Elf Audit Committee
+        * Voting algorithm certified by Christmas Committee
       </div>
     </div>
   );

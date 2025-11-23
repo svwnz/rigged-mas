@@ -107,7 +107,7 @@ const FeedbackBoard: React.FC<FeedbackBoardProps> = ({
           {title}
         </h3>
         <p className="text-xs text-slate-400 mb-6">
-          Leave a note for your favorite house! Be nice (or the elves will know).
+          Leave a note for your favorite house! Be nice.
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -118,7 +118,7 @@ const FeedbackBoard: React.FC<FeedbackBoardProps> = ({
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-3 py-2 text-sm focus:border-yellow-400 outline-none transition-colors"
-              placeholder="Elf Name..."
+              placeholder="Your Name..."
               maxLength={20}
             />
           </div>
