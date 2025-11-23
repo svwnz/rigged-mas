@@ -99,11 +99,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       );
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
       return new Response(
-        JSON.stringify({ error: 'File size must be less than 5MB' }),
+        JSON.stringify({ error: 'File size must be less than 10MB' }),
         { 
           status: 400,
           headers: { 'Content-Type': 'application/json' }
@@ -139,11 +139,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     // Update house record in database with new image URL
-    // Note: In production, you'd want to set up a custom domain for R2
-    const imageUrl = `https://pub-${fileKey}`;  // Simplified for now - update with actual R2 public URL structure
+    // For now, we'll store just the key and serve images through a separate endpoint
+    const imageUrl = `/api/photo/${fileKey}`;
     
     const updateResult = await context.env.DB.prepare(
-      'UPDATE houses SET imageUrl = ? WHERE id = ?'
+      'UPDATE houses SET image_url = ? WHERE id = ?'
     ).bind(imageUrl, Number(houseId)).run();
 
     if (!updateResult.success) {
