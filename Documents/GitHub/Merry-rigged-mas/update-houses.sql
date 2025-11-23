@@ -11,7 +11,7 @@ UPDATE houses SET address = '[15] Jeroboam Loop' WHERE id = 15;
 INSERT OR REPLACE INTO houses (id, address, description, image_url, is_the_one, votes) VALUES
 (2, '[2] Jeroboam Loop', 'Elegant white icicle lights with a charming snowman family display.', '/api/photo/house-2-1763889458328.png', 0, 0),
 (4, '[4] Jeroboam Loop', 'Classic red and green bulbs with a beautiful star topper.', '/api/photo/house-4-1763889461478.png', 0, 0),
-(5, '[5] Jeroboam Loop', 'Festive multicolor display with animated reindeer and sleigh.', 'https://picsum.photos/400/300?random=20', 0, 0),
+(5, '[5] Jeroboam Loop', 'Festive multicolor display with animated reindeer and sleigh.', '/api/photo/house-5-1763889618542.png', 0, 0),
 (6, '[6] Jeroboam Loop', 'Cozy warm white lights creating a winter wonderland scene.', '/api/photo/house-6-1763889465848.png', 0, 0),
 (8, '[8] Jeroboam Loop', 'Spectacular candy cane archway with twinkling pathway lights.', '/api/photo/house-8-1763889469380.png', 0, 0),
 (9, '[9] Jeroboam Loop', 'Impressive LED projection show with dancing snowflakes.', '/api/photo/house-9-1763889471230.png', 0, 0),

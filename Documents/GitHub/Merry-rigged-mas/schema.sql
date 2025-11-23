@@ -31,23 +31,6 @@ CREATE INDEX IF NOT EXISTS idx_messages_house_id ON messages(house_id);
 CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_messages_is_system ON messages(is_system);
 
--- Insert sample houses data
-INSERT OR IGNORE INTO houses (id, address, description, image_url, is_the_one, votes) VALUES
-(1, '101 Candy Cane Lane', 'A modest display with some inflatable reindeer. Cute, but maybe too safe?', 'https://picsum.photos/400/300?random=1', 0, 15),
-(3, '103 Mistletoe Ave', 'High concept minimal white lights. Very chic, very boring.', 'https://picsum.photos/400/300?random=2', 0, 8),
-(7, '107 Jingle Bell Rock', 'A SYMPHONY OF ILLUMINATION. 50,000 synchronized lights, animatronics, and pure holiday spirit.', 'https://picsum.photos/400/300?random=7', 1, 1420),
-(12, '112 Frosty Way', 'They left their Halloween decorations up and put Santa hats on skeletons.', 'https://picsum.photos/400/300?random=4', 0, 22),
-(15, '115 Nutcracker Blvd', 'Lots of lasers. Blinds the neighbors. A bit aggressive.', 'https://picsum.photos/400/300?random=5', 0, 18);
-
--- Insert sample messages
-INSERT OR IGNORE INTO messages (id, name, text, house_id, is_system) VALUES
-(1, 'Santa''s Little Helper', 'House #7 can be seen from space. Literally. ISS confirmed.', 7, 0),
-(2, 'Karen from HOA', 'I usually complain about brightness, but House #7 is tasteful art.', 7, 0),
-(3, 'Anonymous', 'House #3 tried, but #7 has better synchronization.', 3, 0),
-(4, 'The Grinch', 'Even I can''t hate the display at #7. My heart grew 3 sizes.', 7, 0),
-(5, 'Sparky', 'I like the skeletons at #12!', 12, 0),
-(6, 'System Admin', 'Daily Reminder: House #7 uses 100% renewable reindeer energy.', 7, 1);
-
 -- Create triggers to update timestamps
 CREATE TRIGGER IF NOT EXISTS update_houses_timestamp 
     AFTER UPDATE ON houses

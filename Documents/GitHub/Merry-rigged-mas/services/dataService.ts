@@ -1,5 +1,4 @@
 import { House, Message } from '../types';
-import { HOUSES as FALLBACK_HOUSES, INITIAL_MESSAGES as FALLBACK_MESSAGES } from '../constants';
 
 // Helper to determine if we are in a valid API environment or fallback mode
 const isApiAvailable = async () => {
@@ -26,17 +25,12 @@ export const fetchInitialData = async (): Promise<{ houses: House[], messages: M
       votes
     };
   } catch (error) {
-    console.warn("Using fallback data (API unavailable):", error);
-    // Fallback to local constants
-    const votes: Record<number, number> = {};
-    FALLBACK_HOUSES.forEach(h => {
-       // House 7 starts high, others start low (Mock logic)
-       votes[h.id] = h.isTheOne ? 1420 : Math.floor(Math.random() * 25);
-    });
+    console.error("API unavailable - no fallback data available:", error);
+    // Return empty data since we no longer use fallback sample data
     return {
-      houses: FALLBACK_HOUSES,
-      messages: FALLBACK_MESSAGES,
-      votes
+      houses: [],
+      messages: [],
+      votes: {}
     };
   }
 };
