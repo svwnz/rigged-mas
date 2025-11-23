@@ -51,3 +51,27 @@ ehthumbs.db
 .cache
 .temp
 .tmp
+
+# Ignore parent directories and personal files from OneDrive
+../../../*
+../../*
+!../../.gitkeep
+
+# Ignore other project directories in parent folder
+../Budget_Insights/
+../CreakyKnees/
+../Dojome/
+../GKR-Track*/
+../Karate_*/
+../ScrapeScript/
+../Stats/
+../UglyWeb/
+../gkr-tags/
+../godojogo/
+../karate-*/
+../kiai/
+../learn*/
+../online-sensei/
+../oozle-*/
+../propertyflow-nz/
+../stoobmug*/
