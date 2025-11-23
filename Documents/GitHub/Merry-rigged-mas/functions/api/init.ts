@@ -20,6 +20,14 @@ interface D1Database {
   exec<T = unknown>(query: string): Promise<D1Result<T>>;
 }
 
+interface R2Bucket {
+  put(key: string, value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null | Blob, options?: any): Promise<any>;
+  get(key: string, options?: any): Promise<any>;
+  delete(keys: string | string[]): Promise<void>;
+  list(options?: any): Promise<any>;
+  head(key: string): Promise<any>;
+}
+
 interface EventContext<Env, P extends string, Data> {
   request: Request;
   functionPath: string;
@@ -37,6 +45,7 @@ type PagesFunction<Env = unknown, Params extends string = any, Data extends Reco
 
 interface Env {
   DB: D1Database;
+  PHOTOS: R2Bucket;
 }
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {

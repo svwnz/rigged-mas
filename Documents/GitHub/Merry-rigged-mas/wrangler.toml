@@ -11,6 +11,11 @@ binding = "DB"
 database_name = "christmas-lights-db"
 database_id = "057a8623-a580-4d68-b239-59cc164d5689"
 
+# R2 Storage binding for house photos
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "christmas-lights-photos"
+
 # Environment variables for production
 [env.production.vars]
 NODE_ENV = "production"
@@ -20,3 +25,8 @@ NODE_ENV = "production"
 binding = "DB"
 database_name = "christmas-lights-db"
 database_id = "057a8623-a580-4d68-b239-59cc164d5689"
+
+# R2 binding for production environment
+[[env.production.r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "christmas-lights-photos"
