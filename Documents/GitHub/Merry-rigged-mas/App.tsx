@@ -256,8 +256,7 @@ const App: React.FC = () => {
                 Light up the Loop
               </h1>
               <p className="mt-4 text-slate-300 max-w-lg mx-auto text-lg">
-                Select the absolute best house. <br/>
-                <span className="text-xs text-slate-500 italic">(Our AI judge is very objective)</span>
+                Select the absolute best house.
               </p>
             </header>
 
